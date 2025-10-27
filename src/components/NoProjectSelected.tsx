@@ -1,9 +1,9 @@
 import noProjectSelectedImage from "@/assets/no-projects.png";
 import Button from "@/components/Button";
-import type { ReactEventHandler } from "react";
+import type { MouseEventHandler } from "react";
 
-interface PropData {
-  onAddProject: ReactEventHandler;
+type PropData = {
+  onAddProject: MouseEventHandler<HTMLButtonElement>;
 }
 
 const NoProjectSelected = ({ onAddProject }: PropData) => {

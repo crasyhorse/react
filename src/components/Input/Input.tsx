@@ -1,30 +1,42 @@
-import type { InputProps, SharedEqualKeys } from "@/components/Input";
-import type { Ref } from "react";
+import type { InputProps, TextareaProps } from "@/components/Input";
+import type { ComponentPropsWithRef } from "react";
+import { useId } from "react";
 
-interface PropData extends Pick<InputProps, SharedEqualKeys> {
-  label: string;
-  isTextArea?: boolean;
-  ref: Ref<HTMLInputElement>;
-}
+type PropData = InputProps | TextareaProps;
 
-const Input = ({ label, isTextArea, ref, ...props }: PropData) => {
-  let id = props.id ? props.id : crypto.randomUUID();
+const Input = ({ label, isTextArea, ...props }: PropData) => {
+  const id = props.id ?? useId();
   const classes =
     "w-full p-1 border-b-2 rounded-md border-stone-300 bg-stone-200 text-stone-600 focus:outline-none focus:border-stone-600";
-  return (
-    <p className="flex flex-col gap-1 my-4">
-      <label
-        className="text-sm font-bold uppsercase text-stone-500"
-        htmlFor={id}
-      >
-        {label}
-      </label>
-      {isTextArea && <textarea ref={ref} className={classes} id={id} {...props} />}
-      {!isTextArea && (
-        <input ref={ref} className={classes} type="text" id={id} {...props} />
-      )}
-    </p>
+
+  const sharedLabel = (
+    <label className="text-sm font-bold uppercase text-stone-500" htmlFor={id}>
+      {label}
+    </label>
   );
+
+  if (isTextArea) {
+    const typedProps = props as ComponentPropsWithRef<"textarea">;
+    return (
+      <p className="flex flex-col gap-1 my-4">
+        {sharedLabel}
+        <textarea {...typedProps} className={classes} id={id} />
+      </p>
+    );
+  } else {
+    const typedProps = props as ComponentPropsWithRef<"input">;
+    return (
+      <p className="flex flex-col gap-1 my-4">
+        {sharedLabel}
+        <input
+          {...typedProps}
+          className={classes}
+          type={typedProps.type ?? "text"}
+          id={id}
+        />
+      </p>
+    );
+  }
 };
 
 export default Input;

@@ -1,42 +1,29 @@
 import Input from "@/components/Input/Input";
-import { useRef, type ReactEventHandler } from "react";
-import Modal from "./Modal";
-import type { DialogHandle } from "@/types";
+import {
+  useRef,
+  type MouseEventHandler,
+} from "react";
+import Modal from "@/components/Modal";
+import type { DialogHandle, Project } from "@/types";
 
-interface PropData {
-  onAddProject: ReactEventHandler;
-  onCancle: ReactEventHandler;
-}
+type PropData = {
+  onAddProject: (projectData: Omit<Project, "id">) => void;
+  onCancel: MouseEventHandler<HTMLButtonElement>;
+};
 
-const NewProject = ({ onAddProject, onCancle }: PropData) => {
-  const titleRef = useRef<typeof Input>(null);
-  const descriptionRef = useRef<typeof Input>(null);
-  const dueDateRef = useRef<typeof Input>(null);
+const NewProject = ({ onAddProject, onCancel }: PropData) => {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const dueDateRef = useRef<HTMLInputElement>(null);
 
   const modalRef = useRef<DialogHandle>(null);
 
-  const handleSave: ReactEventHandler = () => {
-    let title: string = "";
-    let description: string = "";
-    let dueDate: string = "";
+  const handleSave = () => {
+    const title = titleRef.current?.value.trim() ?? "";
+    const description = descriptionRef.current?.value.trim() ?? "";
+    const dueDate = dueDateRef.current?.value.trim() ?? "";
 
-    if (titleRef.current) {
-      title = titleRef.current.value;
-    }
-
-    if (descriptionRef.current) {
-      description = descriptionRef.current.value;
-    }
-
-    if (dueDateRef.current) {
-      dueDate = dueDateRef.current.value;
-    }
-
-    if (
-      title.trim() === "" ||
-      description.trim() === "" ||
-      dueDate.trim() === ""
-    ) {
+    if (!title || !description || !dueDate) {
       modalRef.current?.open();
       return;
     }
@@ -56,13 +43,15 @@ const NewProject = ({ onAddProject, onCancle }: PropData) => {
         className="backdrop:bg-stone-900"
       >
         <h2 className="text-xl font-bold text-stone-700 my-4">Invalid input</h2>
-        <p className="text-stone-600 mb-4">Oooops ... Looks like you've forgot to enter a value!</p>
+        <p className="text-stone-600 mb-4">
+          Oooops ... Looks like you've forgot to enter a value!
+        </p>
       </Modal>
       <div className="w-[35rem] mt-16">
         <menu className="flex items-center justify-end gap-4 my-4">
           <li>
             <button
-              onClick={onCancle}
+              onClick={onCancel}
               className="text-stone-800 hover:text-stone-950"
             >
               Cancel

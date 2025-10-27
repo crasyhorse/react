@@ -2,7 +2,6 @@ import {
   useImperativeHandle,
   useRef,
   type ComponentPropsWithoutRef,
-  type ReactNode,
   type Ref,
 } from "react";
 import { createPortal } from "react-dom";
@@ -10,8 +9,7 @@ import type { Container } from "react-dom/client";
 import type { DialogHandle } from "@/types";
 import Button from "@/components/Button";
 
-interface PropData extends ComponentPropsWithoutRef<"dialog"> {
-  children: ReactNode;
+type PropData = ComponentPropsWithoutRef<"dialog"> & {
   ref: Ref<DialogHandle>;
   buttonCaption: string;
 }
@@ -31,9 +29,9 @@ const Modal = ({ children, ref, buttonCaption, ...props }: PropData) => {
   });
   return createPortal(
     <dialog
+    {...props}
       ref={dialogRef}
-      {...props}
-      className="backdrop:bg-stone-900/90 p4 rounded-md shadow-md"
+      className="backdrop:bg-stone-900/90 p-4 rounded-md shadow-md"
     >
       {children}
       <form method="dialog" className="mt-4 text-right">

@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 react
+.pnpm-store
+.devcontainer
 
 # Editor directories and files
 .vscode/*
