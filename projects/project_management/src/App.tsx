@@ -21,6 +21,19 @@ function App() {
     setProjectAction(ProjectActions.adding);
   };
 
+  const handleDeleteProject = () => {
+    setProjectAction(ProjectActions.selecting);
+    setProjectState((oldProjectState) => {
+      return {
+        ...oldProjectState,
+        selectedProjectId: null,
+        projects: oldProjectState.projects.filter(
+          (project) => project.id !== oldProjectState.selectedProjectId
+        ),
+      };
+    });
+  };
+
   const handleSaveProject = (projectData: Omit<Project, "id">) => {
     setProjectAction(ProjectActions.nothing);
     setProjectState((oldProjectState) => {
@@ -56,7 +69,7 @@ function App() {
   };
 
   const selectedProject: Project | null =
-    projectState.selectedProjectId != null
+    projectState.selectedProjectId !== null
       ? projectState.projects.find(
           (project) => project.id === projectState.selectedProjectId
         ) ?? null
@@ -77,9 +90,13 @@ function App() {
       {projectAction === ProjectActions.adding && (
         <NewProject onAddProject={handleSaveProject} onCancel={handleCancel} />
       )}
-      {projectAction === ProjectActions.selecting && (
-        <SelectedProject project={selectedProject} />
-      )}
+      {projectAction === ProjectActions.selecting &&
+        selectedProject !== null && (
+          <SelectedProject
+            project={selectedProject}
+            onDelete={handleDeleteProject}
+          />
+        )}
     </main>
   );
 }
