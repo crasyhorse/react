@@ -3,8 +3,9 @@ import type { Place } from "@/types";
 namespace Places {
   export type Props = {
     title: string;
-    fallbackText: string;
-    onSelectPlace: (id: Place["id"]) => void;
+    places: Place[];
+    fallbackText?: string;
+    onSelectPlace: (placeId: Place["id"]) => void;
   };
 }
 

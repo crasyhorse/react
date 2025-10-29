@@ -2,6 +2,7 @@ interface Image {
   src: string;
   alt: string;
 }
+
 export interface Place {
   id: string;
   title: string;
@@ -9,3 +10,10 @@ export interface Place {
   lat: number;
   lon: number;
 }
+
+export interface DialogHandle {
+  open: () => void;
+  close: () => void;
+}
+
+export type State = Place[];
