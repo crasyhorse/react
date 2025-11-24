@@ -1,19 +1,10 @@
-interface Image {
-  src: string;
-  alt: string;
-}
-
-export interface Place {
-  id: string;
-  title: string;
-  image: Image;
+export type Place = {
+  id: number;
+  image: {
+    src: string;
+    alt: string;
+  };
   lat: number;
   lon: number;
-}
-
-export interface DialogHandle {
-  open: () => void;
-  close: () => void;
-}
-
-export type State = Place[];
+  title: string;
+};

@@ -1,30 +1,28 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useRef, useEffect, type ComponentProps } from "react";
 import { createPortal } from "react-dom";
 
 namespace Modal {
-  export type Props = {
-    children: ReactNode;
+  export type Props = ComponentProps<"dialog"> & {
     open: boolean;
   };
 }
-const Modal = function Modal({ children, open }: Modal.Props) {
-  const modalRoot: Element = document.getElementById("modal") as Element;
-  const dialogRef = useRef<HTMLDialogElement>(null);
+function Modal({ open, children, onClose }: Modal.Props) {
+  const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (open) {
-      dialogRef.current?.showModal();
+      dialog.current?.showModal();
     } else {
-      dialogRef.current?.close();
+      dialog.current?.close();
     }
   }, [open]);
-  
+
   return createPortal(
-    <dialog className="modal" ref={dialogRef}>
-      {children}
+    <dialog className="modal" ref={dialog} onClose={onClose}>
+      {open ? children : null}
     </dialog>,
-    modalRoot
+    document.getElementById("modal") as HTMLDialogElement
   );
-};
+}
 
 export default Modal;
