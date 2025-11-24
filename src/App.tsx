@@ -10,7 +10,6 @@ import ErrorPage from "@/components/Error";
 import type { Place } from "@/types";
 import { useHttp } from "@/hooks/http";
 import { useFetch } from "@/hooks/useFetch";
-import { sortPlacesByDistance } from "@/loc";
 
 function App() {
   const selectedPlace = useRef<Place | null>(null);

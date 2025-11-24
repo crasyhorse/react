@@ -8,12 +8,11 @@ export const useFetch = (fetchFn: () => Promise<any>, initialValue: any) => {
   const [data, setData] = useState(initialValue);
 
   useEffect(() => {
-    // async function fetchData() {
       (async () => {
       setIsFetching(true);
       try {
-        const data = await fetchFn();
-        // setData(data);
+        const response = await fetchFn();
+        setData(response);
       } catch (error) {
         let message: string = "";
         if (error instanceof Error) {
@@ -25,9 +24,7 @@ export const useFetch = (fetchFn: () => Promise<any>, initialValue: any) => {
       }
       setIsFetching(false);
       })();
-    // }
-    // fetchData();
-  }, [fetchFn]);
+  }, []);
 
   return { isFetching, error, data, setData };
 };

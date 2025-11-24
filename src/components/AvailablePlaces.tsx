@@ -4,6 +4,7 @@ import Places from "@/components/Places";
 import ErrorPage from "@/components/Error";
 import { sortPlacesByDistance } from "@/loc";
 import { useHttp } from "@/hooks/http";
+import { useFetch } from "@/hooks/useFetch";
 
 namespace AvailablePlaces {
   export type Props = {
@@ -11,28 +12,25 @@ namespace AvailablePlaces {
   };
 }
 
+const { fetchAvailablePlaces } = useHttp();
+const getSortedPlaces = async (): Promise<Place[]> => {
+  const places = await fetchAvailablePlaces();
+
+  return new Promise((resolve) => {
+    const sortedPlaces = sortPlacesByDistance(places, 50.993199, 8.238595);
+    resolve(sortedPlaces);
+  });
+};
+
 export default function AvailablePlaces({
   onSelectPlace,
 }: AvailablePlaces.Props) {
-  const [isFetching, setIsFetching] = useState(false);
-  const [availablePlaces, setAvailablePlaces] = useState<Place[]>([]);
-  const [error, setError] = useState<Error>();
-
-  const { fetchAvailablePlaces } = useHttp();
-
-  useEffect(() => {
-    (async () => {
-      setIsFetching(true);
-      try {
-        const places = await fetchAvailablePlaces();
-        const sortedPlaces = sortPlacesByDistance(places, 50.993199, 8.238595);
-        setAvailablePlaces(sortedPlaces);
-        setIsFetching(false);
-      } catch (error) {
-        setError(error as Error);
-      }
-    })();
-  }, []);
+  const {
+    isFetching,
+    error,
+    data: availablePlaces,
+    setData: setAvailablePlaces,
+  } = useFetch(getSortedPlaces, []);
 
   if (error) {
     const fallbackErrorMessage =
