@@ -1,12 +1,11 @@
-import React from 'react';
-import ReactDOM, { type Container } from 'react-dom/client';
+import React from 'react'
+import ReactDOM, { type Container } from 'react-dom/client'
+import App from '@/App'
+import '@/index.css'
 
-import App from '@/App';
-import '@/index.css';
-
-const root = document.getElementById('root') as Container
+const root = document.getElementById('root') as Container;
 ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
-);
+  </React.StrictMode>,
+)

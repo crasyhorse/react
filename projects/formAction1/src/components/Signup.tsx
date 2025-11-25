@@ -7,36 +7,33 @@ namespace Signup {
 
   export type FormState = {
     errors: never[];
+    enteredValues: Record<string, unknown> | null;
   };
 }
 
-// export function useActionState<State, Payload>(
-//         action: (state: Awaited<State>, payload: Payload) => State | Promise<State>,
-//         initialState: Awaited<State>,
-//         permalink?: string,
-//     ): [state: Awaited<State>, dispatch: (payload: Payload) => void, isPending: boolean];
-
 export default function Signup() {
-  // const signUpAction = async (
-  //   oldState: Signup.FormState,
-  //   formData: FormData
-  // ): Promise<{oldState: Signup.FormState}> => {
   const signUpAction = async (
-    state: {
-      oldState: Signup.FormState;
-    },
+    oldState: Signup.FormState,
     formData: FormData
   ): Promise<Signup.FormState> => {
     const acquisitionChannel = formData.getAll("acquisition");
     const data: Signup.FormEntries = Object.fromEntries(formData.entries());
     data.acquisition = acquisitionChannel;
 
-    return { ...state.oldState };
+    const enteredValues = {};
+
+    return { ...oldState, enteredValues: data };
   };
 
-  const [formState, signUpActionFn, isPending] = useActionState(signUpAction, {
+  const initialState = {
     errors: [],
-  });
+    enteredValues: null,
+  };
+
+  const [formState, signUpActionFn, isPending] = useActionState(
+    signUpAction,
+    initialState
+  );
 
   return (
     <form action={signUpActionFn}>
@@ -45,7 +42,12 @@ export default function Signup() {
 
       <div className="control">
         <label htmlFor="email">Email</label>
-        <input id="email" type="email" name="email" />
+        <input
+          id="email"
+          type="email"
+          name="email"
+          defaultValue={formState.enteredValues?.email as string}
+        />
       </div>
 
       <div className="control-row">
