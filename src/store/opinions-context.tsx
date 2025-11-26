@@ -4,7 +4,6 @@ import {
   useEffect,
   useState,
   type ReactNode,
-  type Context,
 } from "react";
 
 type TOpinionsContext = {
@@ -14,12 +13,13 @@ type TOpinionsContext = {
   downvoteOpinion: (id: TOpinion["id"]) => Promise<void>;
 };
 
-export const OpinionsContext: Context<TOpinionsContext> = createContext({
-  opinions: [],
-  addOpinion: async (opinion: TOpinion) => {},
-  upvoteOpinion: async (id: TOpinion["id"]) => {},
-  downvoteOpinion: async (id: TOpinion["id"]) => {},
+export const OpinionsContext = createContext<TOpinionsContext>({
+  opinions: [] as TOpinion[],
+  addOpinion: async (_opinion) => {},
+  upvoteOpinion: async (_id) => {},
+  downvoteOpinion: async (_id) => {},
 });
+
 
 const BASE_URL = "http://localhost:3000";
 export function OpinionsContextProvider({ children }: { children: ReactNode }) {
